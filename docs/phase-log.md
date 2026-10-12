@@ -28,3 +28,14 @@
 - `npm test`: 7 pruebas pasaron, 0 fallaron.
 - `npx tsc --noEmit`: pasó.
 - `npx expo install --check`: dependencias alineadas usando el mapa local.
+
+## Fase 04 — Dashboard y operaciones locales
+
+- SQLite inicializa la cuenta principal y categorías del sistema; ingresos y gastos se guardan localmente en COP entero.
+- Dashboard usa el saldo real y los totales del mes; formulario permite crear, editar y eliminar, elegir categoría y fecha.
+- Actividad filtra por mes y categoría y abre movimientos existentes para editarlos.
+- `npm test`: 9 pruebas pasaron, 0 fallaron, incluidas migración, persistencia, edición, borrado, filtros y validaciones SQLite.
+- `npx tsc --noEmit`: pasó.
+- `npx expo export --platform ios --clear`: bundle iOS generado correctamente.
+- Expo Go físico pendiente: el entorno aislado bloquea interfaces de red (`Networking has been disabled`). En la Mac, dentro de la carpeta del proyecto y conectado al mismo Wi-Fi del iPhone, ejecutar `npx expo start --lan`; abrir PocketFlow con Expo Go escaneando el QR. No usar `--tunnel`.
+- Decisión: mantener modo claro en esta fase; el catálogo de categorías personalizadas y los presupuestos quedan para Fase 06.

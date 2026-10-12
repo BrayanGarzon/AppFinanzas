@@ -1,17 +1,26 @@
 import { SymbolView } from 'expo-symbols';
-import { Link } from 'expo-router';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Link, useFocusEffect } from 'expo-router';
+import { useSQLiteContext } from 'expo-sqlite';
+import { useCallback, useState } from 'react';
+import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Colors from '@/constants/Colors';
+import { getFinanceDashboard } from '@/services/finance';
+import type { StoredTransaction } from '@/types/finance';
+import { formatCop } from '@/utils/money';
 
-const recentItems = [
-  { title: 'Mercado', detail: 'Hoy · Alimentación', amount: '− $128.500', symbol: 'basket.fill', tone: 'expense' },
-  { title: 'Pago de nómina', detail: 'Ayer · Ingreso', amount: '+ $3.800.000', symbol: 'briefcase.fill', tone: 'income' },
-] as const;
 const displayMonth = new Intl.DateTimeFormat('es-CO', { month: 'long', year: 'numeric' }).format(new Date()).toLocaleUpperCase('es-CO');
 
 export default function HomeScreen() {
+  const db = useSQLiteContext();
+  const [summary, setSummary] = useState<{ realBalanceCop: number; incomeCop: number; expenseCop: number }>({ realBalanceCop: 0, incomeCop: 0, expenseCop: 0 });
+  const [recent, setRecent] = useState<StoredTransaction[]>([]);
+  useFocusEffect(useCallback(() => {
+    let active = true;
+    getFinanceDashboard(db).then((data) => { if (active) { setSummary(data.summary); setRecent(data.recent); } }).catch(() => Alert.alert('Error', 'No se pudo cargar el resumen.'));
+    return () => { active = false; };
+  }, [db]));
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
@@ -30,18 +39,18 @@ export default function HomeScreen() {
             <Text style={styles.balanceLabel}>Saldo total</Text>
             <SymbolView name={{ ios: 'eye', android: 'visibility', web: 'visibility' }} tintColor="#CBE8D9" size={20} />
           </View>
-          <Text style={styles.balanceValue}>$ 4.250.000</Text>
+          <Text style={styles.balanceValue}>{formatCop(summary.realBalanceCop)}</Text>
           <Text style={styles.balanceCaption}>COP · en todas tus cuentas</Text>
           <View style={styles.balanceDivider} />
           <View style={styles.balanceFooter}>
             <View style={styles.balanceMetric}>
               <Text style={styles.metricLabel}>Ingresos</Text>
-              <Text style={styles.metricValue}>↗ $ 5.200.000</Text>
+              <Text style={styles.metricValue}>↗ {formatCop(summary.incomeCop)}</Text>
             </View>
             <View style={styles.metricSeparator} />
             <View style={styles.balanceMetric}>
               <Text style={styles.metricLabel}>Gastos</Text>
-              <Text style={styles.metricValue}>↘ $ 950.000</Text>
+              <Text style={styles.metricValue}>↘ {formatCop(summary.expenseCop)}</Text>
             </View>
           </View>
         </View>
@@ -68,18 +77,17 @@ export default function HomeScreen() {
 
         <View style={styles.sectionHeader}>
           <View><Text style={styles.sectionTitle}>Actividad reciente</Text><Text style={styles.sectionSubtitle}>Tus últimos movimientos</Text></View>
-          <Text style={styles.seeAll}>Ver todo</Text>
+          <Link href="/(tabs)/activity" asChild><Pressable><Text style={styles.seeAll}>Ver todo</Text></Pressable></Link>
         </View>
         <View style={styles.activityCard}>
-          {recentItems.map((item, index) => (
-            <View key={item.title} style={[styles.activityRow, index > 0 && styles.activityBorder]}>
-              <View style={styles.activityIcon}><SymbolView name={{ ios: item.symbol, android: 'circle', web: 'circle' }} tintColor={Colors.light.inkSoft} size={19} /></View>
-              <View style={styles.activityDescription}><Text style={styles.activityTitle}>{item.title}</Text><Text style={styles.activityDetail}>{item.detail}</Text></View>
-              <Text style={[styles.activityAmount, item.tone === 'income' ? styles.incomeText : styles.expenseText]}>{item.amount}</Text>
-            </View>
+          {recent.length === 0 ? <Text style={styles.emptyText}>Tus movimientos recientes aparecerán aquí.</Text> : recent.map((item, index) => (
+            <Link key={item.id} href={{ pathname: '/transaction/new', params: { id: item.id } }} asChild><Pressable style={[styles.activityRow, index > 0 && styles.activityBorder]}>
+              <View style={styles.activityIcon}><SymbolView name={{ ios: item.categorySymbol as never, android: item.kind === 'income' ? 'add_circle' : 'sell', web: item.kind === 'income' ? 'add_circle' : 'sell' }} tintColor={Colors.light.inkSoft} size={19} /></View>
+              <View style={styles.activityDescription}><Text style={styles.activityTitle}>{item.description || item.categoryName}</Text><Text style={styles.activityDetail}>{item.date} · {item.categoryName}</Text></View>
+              <Text style={[styles.activityAmount, item.kind === 'income' ? styles.incomeText : styles.expenseText]}>{item.kind === 'income' ? '+' : '−'} {formatCop(item.amountCop)}</Text>
+            </Pressable></Link>
           ))}
         </View>
-        <Text style={styles.demoNote}>Vista de muestra · los datos locales llegan en la fase 04</Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -97,7 +105,7 @@ const styles = StyleSheet.create({
   sectionHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }, sectionTitle: { color: Colors.light.ink, fontSize: 17, fontWeight: '700' }, sectionSubtitle: { color: Colors.light.muted, fontSize: 12, marginTop: 4 },
   quickActions: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 28 }, quickAction: { width: '31%', minHeight: 94, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.light.surface, borderRadius: 18, borderWidth: 1, borderColor: Colors.light.border, paddingHorizontal: 5 },
   actionIcon: { width: 42, height: 42, borderRadius: 14, alignItems: 'center', justifyContent: 'center', marginBottom: 9 }, expenseIcon: { backgroundColor: '#FCECE8' }, incomeIcon: { backgroundColor: Colors.light.softGreen }, transferIcon: { backgroundColor: '#FFF5DF' }, actionLabel: { color: Colors.light.ink, fontSize: 11, fontWeight: '600' },
-  seeAll: { color: Colors.light.tint, fontSize: 12, fontWeight: '700' }, activityCard: { backgroundColor: Colors.light.surface, borderRadius: 18, borderWidth: 1, borderColor: Colors.light.border, paddingHorizontal: 15 },
+  seeAll: { color: Colors.light.tint, fontSize: 12, fontWeight: '700' }, activityCard: { backgroundColor: Colors.light.surface, borderRadius: 18, borderWidth: 1, borderColor: Colors.light.border, paddingHorizontal: 15 }, emptyText: { color: Colors.light.muted, fontSize: 12, paddingVertical: 20 },
   activityRow: { minHeight: 72, flexDirection: 'row', alignItems: 'center' }, activityBorder: { borderTopWidth: 1, borderTopColor: Colors.light.border }, activityIcon: { width: 40, height: 40, borderRadius: 13, backgroundColor: Colors.light.background, alignItems: 'center', justifyContent: 'center', marginRight: 12 },
   activityDescription: { flex: 1 }, activityTitle: { color: Colors.light.ink, fontSize: 13, fontWeight: '600' }, activityDetail: { color: Colors.light.muted, fontSize: 11, marginTop: 4 }, activityAmount: { fontSize: 12, fontWeight: '700' }, incomeText: { color: Colors.light.tint }, expenseText: { color: Colors.light.danger }, demoNote: { textAlign: 'center', color: Colors.light.muted, fontSize: 10, marginTop: 16 },
 });

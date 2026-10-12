@@ -68,3 +68,15 @@ export interface FinancialSummary {
   incomeCop: Cop;
   expenseCop: Cop;
 }
+
+export interface StoredTransaction {
+  id: string;
+  kind: 'income' | 'expense';
+  accountId: string;
+  categoryId: string;
+  categoryName: string;
+  categorySymbol: string;
+  amountCop: Cop;
+  date: string;
+  description: string;
+}

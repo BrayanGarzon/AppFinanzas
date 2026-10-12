@@ -57,10 +57,10 @@ Desarrollar una aplicación móvil privada de finanzas personales para utilizar 
 - [x] Crear pruebas de cálculos y casos límite
 
 ## Fase 04 — Dashboard y operaciones locales
-- [ ] Construir dashboard
-- [ ] Crear, editar y eliminar ingresos y gastos
-- [ ] Filtrar por mes y categoría
-- [ ] Persistir datos locales
+- [x] Construir dashboard con saldos y movimientos recientes de SQLite
+- [x] Crear, editar y eliminar ingresos y gastos
+- [x] Filtrar por mes y categoría
+- [x] Persistir datos locales
 
 ## Fase 05 — Supabase y seguridad
 - [ ] Crear proyecto Supabase gratuito

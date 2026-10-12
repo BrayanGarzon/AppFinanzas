@@ -3,6 +3,8 @@ import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
+import { SQLiteProvider } from 'expo-sqlite';
+import { initializeFinanceDatabase } from '@/services/finance';
 
 import { useColorScheme } from '@/components/useColorScheme';
 
@@ -47,10 +49,12 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="transaction/new" options={{ presentation: 'modal', headerShown: false }} />
-      </Stack>
+      <SQLiteProvider databaseName="pocketflow.db" onInit={initializeFinanceDatabase}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="transaction/new" options={{ presentation: 'modal', headerShown: false }} />
+        </Stack>
+      </SQLiteProvider>
     </ThemeProvider>
   );
 }

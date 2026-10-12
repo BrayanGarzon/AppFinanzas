@@ -40,7 +40,7 @@ Aplicación móvil privada para finanzas personales, pensada para uso personal e
 
 ## Inicio
 
-La app usa Expo Router con TypeScript y requiere Node.js 24.12 o posterior y npm. Instala las dependencias con `npm install` y ejecuta `npm start -- --tunnel` para abrir el servidor de Expo. Para probar en iPhone, instala Expo Go y escanea el QR que presenta Expo. La instalación independiente se aborda en la fase 11 y puede requerir firma de Apple.
+La app usa Expo Router con TypeScript y requiere Node.js 24.12 o posterior y npm. Instala las dependencias con `npm install`. Para abrir Expo Go desde un iPhone en la misma red Wi-Fi, ejecuta `npm run start:lan` y escanea el QR. El almacenamiento local usa SQLite en iOS y Android. La instalación independiente se aborda en la fase 11 y puede requerir firma de Apple.
 
 ## Fases
 
