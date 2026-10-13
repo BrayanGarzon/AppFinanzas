@@ -81,7 +81,7 @@ export default function HomeScreen() {
         </View>
         <View style={styles.activityCard}>
           {recent.length === 0 ? <Text style={styles.emptyText}>Tus movimientos recientes aparecerán aquí.</Text> : recent.map((item, index) => (
-            <Link key={item.id} href={{ pathname: '/transaction/new', params: { id: item.id } }} asChild><Pressable style={[styles.activityRow, index > 0 && styles.activityBorder]}>
+            <Link key={item.id} href={{ pathname: '/transaction/new', params: { id: item.id } }} asChild><Pressable style={StyleSheet.flatten([styles.activityRow, index > 0 ? styles.activityBorder : undefined])}>
               <View style={styles.activityIcon}><SymbolView name={{ ios: item.categorySymbol as never, android: item.kind === 'income' ? 'add_circle' : 'sell', web: item.kind === 'income' ? 'add_circle' : 'sell' }} tintColor={Colors.light.inkSoft} size={19} /></View>
               <View style={styles.activityDescription}><Text style={styles.activityTitle}>{item.description || item.categoryName}</Text><Text style={styles.activityDetail}>{item.date} · {item.categoryName}</Text></View>
               <Text style={[styles.activityAmount, item.kind === 'income' ? styles.incomeText : styles.expenseText]}>{item.kind === 'income' ? '+' : '−'} {formatCop(item.amountCop)}</Text>
