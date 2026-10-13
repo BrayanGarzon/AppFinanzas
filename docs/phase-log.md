@@ -13,8 +13,8 @@
 - `npx tsc --noEmit`: pasó.
 - `npx expo install --check`: dependencias alineadas según el mapa local de SDK 57; Expo no pudo consultar el endpoint público de versiones.
 - Expo Doctor: 20 de 21 comprobaciones pasaron; la comprobación de React Native Directory falló porque el servicio devolvió una respuesta inesperada.
-- Metro inició con túnel y el endpoint `/status` respondió `packager-status:running`. El túnel se detuvo después de que el control de seguridad rechazara solicitar el bundle iOS mediante una URL pública de terceros. No se envió el bundle iOS ni se confirmó la apertura en el teléfono.
-- Pendiente: abrir la app con Expo Go desde el iPhone usando un servidor local en la misma red Wi-Fi.
+- La prueba inicial con túnel público se detuvo por el control de seguridad; el bundle no se solicitó mediante ese túnel.
+- La usuaria confirmó apertura y uso básico desde Expo Go con el servidor LAN y la misma cuenta Expo en el teléfono y CLI.
 
 ## Fase 02 — Diseño móvil
 
@@ -37,5 +37,15 @@
 - `npm test`: 9 pruebas pasaron, 0 fallaron, incluidas migración, persistencia, edición, borrado, filtros y validaciones SQLite.
 - `npx tsc --noEmit`: pasó.
 - `npx expo export --platform ios --clear`: bundle iOS generado correctamente.
-- Expo Go físico pendiente: el entorno aislado bloquea interfaces de red (`Networking has been disabled`). En la Mac, dentro de la carpeta del proyecto y conectado al mismo Wi-Fi del iPhone, ejecutar `npx expo start --lan`; abrir PocketFlow con Expo Go escaneando el QR. No usar `--tunnel`.
+- Expo Go físico validado en iPhone; se corrigió un error de estilos en enlaces al renderizar movimientos recientes y se volvió a exportar iOS.
 - Decisión: mantener modo claro en esta fase; el catálogo de categorías personalizadas y los presupuestos quedan para Fase 06.
+
+## Fase 05 — Supabase y seguridad (en curso)
+
+- Cliente Supabase opcional, sesión persistente y controles de crear cuenta/iniciar sesión añadidos en Más; sin `.env`, la app mantiene SQLite local.
+- Migración de perfiles, cuentas, categorías, movimientos, grants y políticas RLS creada; semilla de categorías de sistema añadida.
+- Pruebas pgTAP de aislamiento, CRUD y validación de cuenta/categoría creadas en `supabase/tests/rls.test.sql`.
+- `npm test`: 11 pruebas pasaron, 0 fallaron (incluye comprobaciones estáticas de seguridad SQL).
+- `npx tsc --noEmit`: pasó. Exportaciones iOS y web generadas; se añadió soporte Metro para el asset WASM de SQLite web (Expo lo considera alpha).
+- Docker CLI existe, pero Docker Desktop no está instalado/iniciado; no se pudo ejecutar `npx supabase test db`. Tampoco existe proyecto Supabase enlazado, así que no se aplicó la migración ni se verificó auth remoto.
+- Pasos para terminar y configurar credenciales locales sin exponer secretos en [`supabase.md`](supabase.md).

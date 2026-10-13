@@ -1,13 +1,14 @@
 import { SymbolView } from 'expo-symbols';
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Colors from '@/constants/Colors';
+import SupabaseAccountPanel from '@/components/SupabaseAccountPanel';
 
 export default function MoreScreen() {
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <View style={styles.content}>
+      <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.kicker}>POCKETFLOW</Text>
         <Text style={styles.title}>Más opciones</Text>
         <View style={styles.list}>
@@ -15,8 +16,9 @@ export default function MoreScreen() {
             <View key={item} style={styles.row}><Text style={styles.rowText}>{item}</Text><SymbolView name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }} tintColor={Colors.light.muted} size={15} /></View>
           ))}
         </View>
+        <SupabaseAccountPanel />
         <Text style={styles.note}>Estas secciones se construirán en sus fases correspondientes.</Text>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

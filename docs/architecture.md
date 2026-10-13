@@ -42,7 +42,7 @@ Alcance, exclusiones, arquitectura base y criterios de aceptación definidos. Se
 
 ## Estado de fase 01
 
-Proyecto Expo con TypeScript y Expo Router creado a partir de la plantilla oficial `tabs` (SDK 57). Navegación base configurada; `npm start -- --tunnel` levantó Metro y generó el QR `exp://xobcpo0-anonymous-8081.exp.direct`. Queda pendiente confirmar la apertura desde el iPhone físico.
+Proyecto Expo con TypeScript y Expo Router creado a partir de la plantilla oficial `tabs` (SDK 57). La app se abrió y se probó desde Expo Go en el iPhone mediante red local; no se depende de un túnel público.
 
 SDK 57 requiere iOS 16.4 o posterior según su referencia oficial. Confirmar que el iPhone de destino cumple antes de cerrar la validación de Expo Go.
 

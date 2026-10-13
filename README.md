@@ -44,4 +44,4 @@ La app usa Expo Router con TypeScript y requiere Node.js 24.12 o posterior y npm
 
 ## Fases
 
-El alcance, decisiones, estado de fases y limitaciones están en [`docs/architecture.md`](docs/architecture.md), [`docs/financial-model.md`](docs/financial-model.md), [`docs/phase-log.md`](docs/phase-log.md) y [`planner.md`](planner.md). Ejecuta `npm test` para probar las reglas financieras. El proyecto avanza en orden y las funcionalidades se implementan cuando su fase inicia.
+La conexión y las políticas de Supabase están descritas en [`docs/supabase.md`](docs/supabase.md). El alcance, decisiones, estado de fases y limitaciones están en [`docs/architecture.md`](docs/architecture.md), [`docs/financial-model.md`](docs/financial-model.md), [`docs/phase-log.md`](docs/phase-log.md) y [`planner.md`](planner.md). Ejecuta `npm test` para probar las reglas financieras. El proyecto avanza en orden y las funcionalidades se implementan cuando su fase inicia.

@@ -42,7 +42,7 @@ Desarrollar una aplicación móvil privada de finanzas personales para utilizar 
 - [x] Verificar Node.js y npm en Mac
 - [x] Crear proyecto Expo con TypeScript
 - [x] Configurar navegación y estructura inicial
-- [ ] Confirmar apertura en iPhone con Expo Go (servidor con túnel activo; falta validación en el dispositivo)
+- [x] Confirmar apertura en iPhone con Expo Go (red local; validada por la usuaria)
 
 ## Fase 02 — Diseño y experiencia móvil
 - [x] Definir colores, tipografía e iconografía
@@ -64,8 +64,8 @@ Desarrollar una aplicación móvil privada de finanzas personales para utilizar 
 
 ## Fase 05 — Supabase y seguridad
 - [ ] Crear proyecto Supabase gratuito
-- [ ] Crear migraciones y tablas PostgreSQL
-- [ ] Configurar autenticación y políticas RLS
+- [x] Preparar migración y tablas PostgreSQL (pendiente aplicar en el proyecto)
+- [x] Preparar autenticación y políticas RLS (pendiente desplegar y probar en el proyecto)
 - [ ] Conectar la app y probar permisos
 
 ## Fase 06 — Presupuestos y categorías

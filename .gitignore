@@ -11,3 +11,6 @@ coverage/
 
 expo-env.d.ts
 # @end expo-cli
+# Local Supabase credentials
+.env*
+!.env.example
