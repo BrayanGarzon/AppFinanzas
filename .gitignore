@@ -14,3 +14,6 @@ expo-env.d.ts
 # Local Supabase credentials
 .env*
 !.env.example
+
+# Supabase CLI local state
+supabase/.temp/
